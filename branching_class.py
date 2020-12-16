@@ -87,20 +87,20 @@ class BranchAndBound:
             
             
         
-# restriction = [2, 3, 1, 3]
-# restrict = 4.0
-# optimize = [3, 4, 1, 2]
-restriction = [4, 5, 1, 3]
-restrict = 6.0
-optimize = [7, 8, 1, 2]
+restriction = [2, 3, 1, 3]
+restrict = 4.0
+optimize = [3, 4, 1, 2]
+# restriction = [4, 5, 1, 3]
+# restrict = 6.0
+# optimize = [7, 8, 1, 2]
 
 bb = BranchAndBound(restriction, optimize, restrict)
 bb.initialize()
 # bb.do_P([],[], [0])#分岐が両方終端してしまってもinit_optを更新してしまう
 bb.do_P([], [], bb.init_exclude)
 
-print("\nanswer pairs", bb.pairs)
-# print("best opt", bb.init_opt)
+print("\npairs", bb.pairs)
+
         
         
         
