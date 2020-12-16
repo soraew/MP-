@@ -11,7 +11,7 @@ weights_sorted = sort_dict(weights)
 init_opt = 0.0
 
 def P(zeros, ones, initial=False, optimize=optimize, weights_sorted=weights_sorted, restrict=restrict, init_opt=init_opt):
-    print("doing P({}, {})".format(zeros, ones))
+    print("\ndoing P({}, {})".format(zeros, ones))
     restrict_left = restrict
     # print("init_opt",init_opt)
     
@@ -25,7 +25,7 @@ def P(zeros, ones, initial=False, optimize=optimize, weights_sorted=weights_sort
     restrict_left -= np.dot(restriction, mask)
     if restrict_left <= 0:
         print("restrict has reached below 0")
-        return False
+        return False, False
     
     ans = get_relaxed(weights_sorted, exclude, restrict_left, restriction, optimize) + mask
     print("ans is", ans)
@@ -40,34 +40,43 @@ def P(zeros, ones, initial=False, optimize=optimize, weights_sorted=weights_sort
         return init_exclude, init_opt
     else:
         if floor(opt) > init_opt:
+            print("setting new opt as ", floor(opt))
+            # init_opt = floor(opt)#this is not working
             print("going to next, opt is ", opt, "\n")
             print("exclude next ", exclude_next)
-            return exclude_next
+            return exclude_next, floor(opt)
         else:
             print("ending, opt is ", opt, "\n")
-            return False
+            return False, False
         
     
 init_exclude, init_opt = P([], [], True)
 # exclude = P([1], [0], init_opt=init_opt)
 
+best = {}
 def do_P(zeros, ones, exclude_next, init_opt=init_opt, optimize=optimize, \
     weights_sorted=weights_sorted, restrict=restrict):
     if exclude_next:
         print("exclude_next", exclude_next)
         zeros_next = zeros + exclude_next
-        exclude_next_z = P(zeros_next, ones, init_opt=init_opt)
+        exclude_next_z, new_opt_z = P(zeros_next, ones)
         
         ones_next = ones + exclude_next
-        exclude_next_o = P(zeros, ones_next, init_opt=init_opt)
+        exclude_next_o, new_opt_o = P(zeros, ones_next)
+        
+        print("current init_opt is ", init_opt)
         
         if exclude_next_z:
-            do_P(zeros_next, ones, exclude_next_z)
+            print("DO Z!")
+            init_opt = new_opt_z
+            do_P(zeros_next, ones, exclude_next_z, init_opt = init_opt)
         else:
             pass
             
         if exclude_next_o:
-            do_P(zeros, ones_next, exclude_next_o)
+            print("DO O!")
+            init_opt = new_opt_o
+            do_P(zeros, ones_next, exclude_next_o, init_opt = init_opt)
         else:
             pass
     else:
