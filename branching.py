@@ -40,7 +40,7 @@ def P(zeros, ones, initial=False, optimize=optimize, weights_sorted=weights_sort
         return init_exclude, init_opt
     else:
         if floor(opt) > init_opt:
-            print("setting new opt as ", floor(opt))
+            print("setting new init_opt as ", floor(opt))
             # init_opt = floor(opt)#this is not working
             print("going to next, opt is ", opt, "\n")
             print("exclude next ", exclude_next)
@@ -68,14 +68,14 @@ def do_P(zeros, ones, exclude_next, init_opt=init_opt, optimize=optimize, \
         
         if exclude_next_z:
             print("DO Z!")
-            init_opt = new_opt_z
+            init_opt = new_opt_z#this is not working
             do_P(zeros_next, ones, exclude_next_z, init_opt = init_opt)
         else:
             pass
             
         if exclude_next_o:
             print("DO O!")
-            init_opt = new_opt_o
+            init_opt = new_opt_o#this is not working
             do_P(zeros, ones_next, exclude_next_o, init_opt = init_opt)
         else:
             pass
