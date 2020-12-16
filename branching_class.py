@@ -14,8 +14,11 @@ class BranchAndBound:
         self.init_exclude = []
         self.init_ans = []
         
+        self.pairs = {}
+        
     def P(self, zeros, ones, initial=False):
-        print("------doing P({}, {})-------".format(zeros, ones))
+        print("------doing P({}, {})-------"\
+            .format(np.array(zeros)+1, np.array(ones)+1))
         restrict_left = self.restrict
         exclude = []
         exclude.extend(zeros)
@@ -26,7 +29,7 @@ class BranchAndBound:
         restrict_left -= np.dot(self.restriction, mask)
         
         if restrict_left <= 0:
-            print("restricl_left reached 0")
+            print("restricl_left reached 0\n")
             return False, False
         
         ans = get_relaxed(self.weights_sorted, exclude, \
@@ -42,10 +45,12 @@ class BranchAndBound:
         if initial:
             self.init_ans, self.init_exclude = _, exclude_next
             self.init_opt = calc_opt(self.optimize, self.init_ans)
+            print("init_opt is ", self.init_opt)
             print("init_ans is ", self.init_ans,"\n")
         else:
             if floor(opt) > self.init_opt:
                 self.init_opt = floor(opt)
+                self.pairs.update({floor(opt):ans})#best ans 更新
                 print("new init_opt is", self.init_opt,"\n")
                 return exclude_next, floor(opt)
             else:
@@ -76,22 +81,26 @@ class BranchAndBound:
         print("initialize")
         self.P([], [], initial=True)
         
+    # solve だけだとprintが出力されない
     def solve(self):
         self.do_P([], [], self.init_exclude)
             
             
         
-restriction = [2, 3, 1, 3]
-restrict = 4.0
-optimize = [3, 4, 1, 2]
+# restriction = [2, 3, 1, 3]
+# restrict = 4.0
+# optimize = [3, 4, 1, 2]
+restriction = [4, 5, 1, 3]
+restrict = 6.0
+optimize = [7, 8, 1, 2]
+
 bb = BranchAndBound(restriction, optimize, restrict)
 bb.initialize()
-bb.do_P([],[], bb.init_exclude)
-# bb.solve()
-        
-        
-        
-        
+# bb.do_P([],[], [0])#分岐が両方終端してしまってもinit_optを更新してしまう
+bb.do_P([], [], bb.init_exclude)
+
+print("\nanswer pairs", bb.pairs)
+# print("best opt", bb.init_opt)
         
         
         
