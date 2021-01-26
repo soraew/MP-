@@ -21,4 +21,5 @@ and constraint :
 
   Enter constraint function array : 4 5 1 3
 
-  Enter constraint : 6```
+  Enter constraint : 6
+  ```
