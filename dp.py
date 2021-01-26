@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import copy
+from hfuncs import sort_dict
 
 n = int(input('Enter number of variables : '))
 c_ = list(map(int,input("\nEnter objective function array : ").strip().split()))[:n]
@@ -76,12 +77,6 @@ def J(k, theta, a, c):
 for k in range(2, len(a)+1):
     for theta in range(restrict+1):
         J(k, theta, a, c)
-        
-def sort_dict(dict):
-    sorted_dict = {}
-    for w in sorted(dict,key=dict.get,reverse=True):
-        sorted_dict.update({w:dict[w]})
-    return sorted_dict
 
 final = {item[0]:item[1][0] for item in Js.items()}
 final_dict = sort_dict(final)
